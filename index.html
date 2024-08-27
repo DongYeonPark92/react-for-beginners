@@ -5,6 +5,7 @@
   </body>
   <script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/prop-types@15.7.2/prop-types.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script type="text/babel">
     /*const h2 = React.createElement(
@@ -36,7 +37,7 @@
 
     // const container = React.createElement("div", null, [h2, title, btn]);
     //아래 useState 기능 익혀놔야함
-    function Container() {
+    /*function Container() {
       //const data = React.useState(0);
       const [counter, setCounter] = React.useState(0);
       const onClick = () => {
@@ -154,6 +155,42 @@
           {index === "xx" ? "Select your units" : null}
           {index === "0" ? <MinutesToHours /> : null}
           {index === "1" ? <KmToMiles /> : null}
+        </div>
+      );
+    }
+    */
+    function Btn({ banana, changeValue, fontSize }) {
+      console.log(banana, "was changed");
+      return (
+        <button
+          onClick={changeValue}
+          style={{
+            backgroundColor: "blue",
+            color: "red",
+            padding: "10px 20px",
+            border: 0,
+            borderRadius: 10,
+            fontSize,
+          }}
+        >
+          {banana}
+        </button>
+      );
+    }
+    Btn.propTypes = {
+      banana: PropTypes.string.isRequired,
+      fontSize: PropTypes.number,
+    };
+    //React.memo은 컴포넌트 안에 props가 변경되지 않는다면 굳이 리렌더링 되지 않아도 되게끔 해주는 기능! 만약 부모 컴포넌트 안에 1000개의 자식 컴포넌트 중 1개만 props가 변경됐을 경우 1000개 모두 리렌더링 되지 않게 하는게 중요. 추후 어플리케이션이 느려지는 이유 중 하나!
+    const MemorizedBtn = React.memo(Btn);
+    function App() {
+      const [value, setValue] = React.useState("Save Changes");
+      const changeValue = () => setValue("Revert Changes");
+      return (
+        <div>
+          {/* 아래 Btn 컴포넌트 안에 들어가는 "banana","onclick"은 단지 props이고 기능을 담당하는건 아니다 */}
+          <MemorizedBtn banana={value} changeValue={changeValue} />
+          <MemorizedBtn banana="Continue" fontSize={30} />
         </div>
       );
     }
